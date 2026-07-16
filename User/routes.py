@@ -25,15 +25,8 @@ def login(formData:OAuth2PasswordRequestForm = Depends()):
     if foundUser != None:
         if verifyPassword(formData.password,foundUser.hashedPassword):
             token = generateJwtToken({"sub":formData.username})
-            return {"Access_token":token , "token_type": "bearer"}
+            return {"access_token":token , "token_type": "bearer"}
         else:
             raise HTTPException(status_code = 401, detail = "Unauthorized")
     else:
         raise HTTPException(status_code = 404, detail = "User Not Found")
-
-##Get user via email
-@router.get("/email/{email}")
-def getUserViaEmail(email:str):
-    db = sessionMaker()
-    user = db.query(UserDB).filter(UserDB.email == email).first()
-    return user

@@ -17,13 +17,13 @@ async def websocketEndpoint(websocket:WebSocket, roomId:str, email: str = ""):
     db = sessionMaker()
     messages = db.query(MessageDB).filter(MessageDB.roomId == roomId).all()
     for history in messages:
-        await websocket.send_text(history.content)
+        await websocket.send_text(f"{history.user}:{history.content}")
 
     try:
         while True:
             message = await websocket.receive_text()
             db = sessionMaker()
-            newMessage = MessageDB(roomId = roomId, content = message, timestamp = datetime.now())
+            newMessage = MessageDB(user = email,roomId = roomId, content = message, timestamp = datetime.now())
             db.add(newMessage)
             db.commit()
             db.close()
