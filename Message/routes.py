@@ -8,7 +8,7 @@ routers = APIRouter()
 rooms={}
 
 @routers.websocket("/ws/{roomId}")
-async def websocketEndpoint(websocket:WebSocket, roomId:str):
+async def websocketEndpoint(websocket:WebSocket, roomId:str, email: str = ""):
     await websocket.accept()
     if roomId not in rooms:
         rooms[roomId] = []
@@ -28,7 +28,7 @@ async def websocketEndpoint(websocket:WebSocket, roomId:str):
             db.commit()
             db.close()
             for connection in rooms[roomId]:
-                await connection.send_text(message)
+                await connection.send_text(f"{email}:{message}")
 
     except Exception:
         rooms[roomId].remove(websocket)

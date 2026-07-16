@@ -18,6 +18,7 @@
         let username;
 
         function connect() {
+            document.getElementById("chat").innerHTML = "";
             const room = document.getElementById("room").value;
             username = document.getElementById("username").value;
             ws = new WebSocket(`ws://127.0.0.1:8000/ws/${room}?email=${username}`);
